@@ -325,21 +325,21 @@ describe("VeriTrace AI Frontend — Complete UI Flow and States", () => {
     expect(screen.queryByRole("heading", { name: /Supported by evidence/i })).not.toBeInTheDocument();
   });
 
-  it("renders Research, Evidence, and About sections via navigation", () => {
+  it("renders Evidence, Intelligence, and About sections via navigation", () => {
     render(<App />);
-
-    // Navigate to Research
-    fireEvent.click(screen.getAllByRole("button", { name: /Research/i })[0]);
-    expect(screen.getByRole("heading", { name: /Methodology & Research/i })).toBeInTheDocument();
-    expect(screen.getByText(/X-Fact/i)).toBeInTheDocument();
-
-    // Navigate to About
-    fireEvent.click(screen.getAllByRole("button", { name: /About/i })[0]);
-    expect(screen.getByRole("heading", { name: /Why VeriTrace Exists/i })).toBeInTheDocument();
-    expect(screen.getAllByText(/Assessment, not absolute truth/i).length).toBeGreaterThan(0);
 
     // Navigate to Evidence
     fireEvent.click(screen.getAllByRole("button", { name: /Evidence/i })[0]);
     expect(screen.getByRole("heading", { name: /Trace the Evidence/i })).toBeInTheDocument();
+
+    // Navigate to Intelligence
+    fireEvent.click(screen.getAllByRole("button", { name: /Intelligence/i })[0]);
+    expect(screen.getByRole("heading", { name: /System Intelligence/i })).toBeInTheDocument();
+
+    // Navigate to About
+    fireEvent.click(screen.getAllByRole("button", { name: /About/i })[0]);
+    expect(screen.getByRole("heading", { name: /Why VeriTrace Exists/i })).toBeInTheDocument();
+    expect(screen.getByText(/X-Fact/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Assessment, not absolute truth/i).length).toBeGreaterThan(0);
   });
 });

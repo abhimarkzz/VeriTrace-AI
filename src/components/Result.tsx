@@ -12,6 +12,8 @@ import {
   IconAlert,
   IconShield,
   IconArrow,
+  IconCopy,
+  IconHistory,
 } from "./Icons";
 import { ASSESSMENT_META, RELATION_META, percent } from "../presentation";
 import { LANGUAGE_LABELS, type EvidenceItem, type VerificationResult } from "../types";
@@ -40,7 +42,6 @@ function formatDate(dateStr?: string): string {
  * Highlights relevant keywords or numbers in the extracted claim.
  */
 function HighlightedClaim({ claim }: { claim: string }) {
-  // Highlight numerical entities, currencies, or quoted key phrases
   const parts = useMemo(() => {
     const regex = /(\b(?:\d+(?:\.\d+)?%?|\d+\s*(?:percent|cr|lakh|crore|billion|million|rupees|rs\.?))\b|[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/gi;
     const tokens: Array<{ text: string; highlight: boolean }> = [];
@@ -80,7 +81,7 @@ function HighlightedClaim({ claim }: { claim: string }) {
 }
 
 /**
- * Interactive Evidence Relationship Diagram (Lightweight SVG)
+ * Interactive Evidence Relationship Diagram
  */
 function EvidenceRelationshipMap({
   claim,
@@ -117,7 +118,7 @@ function EvidenceRelationshipMap({
 
         {/* Tree Branches */}
         <div className="tree-branches">
-          {evidence.map((item, idx) => {
+          {evidence.map((item) => {
             const relMeta = RELATION_META[item.relation] || RELATION_META.INSUFFICIENT;
             const isSelected = selectedItem?.id === item.id;
 
@@ -173,7 +174,7 @@ function EvidenceRelationshipMap({
 }
 
 /**
- * Chronological Evidence Timeline (when dates exist)
+ * Chronological Evidence Timeline
  */
 function EvidenceTimeline({ items }: { items: EvidenceItem[] }) {
   const datedItems = useMemo(() => {
@@ -191,7 +192,7 @@ function EvidenceTimeline({ items }: { items: EvidenceItem[] }) {
         Evidence Timeline
       </h3>
       <div className="timeline-trail">
-        {datedItems.map((item, idx) => (
+        {datedItems.map((item) => (
           <div key={item.id} className="timeline-entry">
             <div className="timeline-marker" />
             <div className="timeline-content">
@@ -320,7 +321,7 @@ export function Result({ result, onReset }: ResultProps) {
           )
         : ["No external sources traced."]),
       ``,
-      `AI-assisted assessment — review the cited sources. Model confidence reflects prediction strength; it does not guarantee factual truth.`,
+      `AI-assisted assessment — review the cited sources. Model confidence reflects prediction strength; it does not guarantee factual certainty.`,
     ]
       .filter((l) => l !== undefined)
       .join("\n");
@@ -352,159 +353,169 @@ export function Result({ result, onReset }: ResultProps) {
 
   return (
     <div className="result fade-in" style={style}>
-      {/* Breadcrumb Navigation */}
-      <div className="crumb">
-        <IconHome />
-        <span>Verification Result</span>
-        <span className="crumb-sep">/</span>
-        <span className="crumb-id">{result.analysisId ? `ID: ${result.analysisId}` : "Live Investigation"}</span>
-      </div>
-
-      {/* Primary Editorial Verdict Banner */}
-      <header className="verdict-head">
-        <div className="verdict-lead">
-          <span className="verdict-ico">
-            <VerdictIcon />
+      {/* Top Breadcrumb & Action Toolbar */}
+      <div className="result-top-bar">
+        <div className="crumb">
+          <IconHome className="crumb-icon" />
+          <span>Verification Report</span>
+          <span className="crumb-sep">/</span>
+          <span className="crumb-id" title="Investigation Identifier">
+            {result.analysisId ? `ID: ${result.analysisId}` : "Live Investigation"}
           </span>
-          <div>
-            <div className="verdict-eyebrow">FINAL VERIFICATION ASSESSMENT</div>
-            <h1 className="verdict-name">
-              <span>{meta.lead}</span>
-              {meta.rest}
-            </h1>
-            <p className="verdict-summary">{meta.summary}</p>
-            <p className="ai-disclaimer">
-              <IconShield className="disclaimer-ico" />
-              <span>
-                Assessment, not absolute truth. Confidence reflects model prediction strength; it does not guarantee factual certainty.
-              </span>
-            </p>
-          </div>
         </div>
 
-        {/* Vital Metrics Grid */}
-        <div className="stats">
-          <div className="stat stat-confidence">
-            <div className="stat-label">Model Confidence</div>
-            <div className="stat-value">
-              {hasConfidence ? percent(result.confidence) : "Baseline"}
+        <div className="result-actions">
+          {onReset && (
+            <button
+              className="btn-editorial-primary btn-sm"
+              onClick={onReset}
+              aria-label="Run another analysis"
+            >
+              <IconArrow className="arrow-left-ico" style={{ transform: "rotate(180deg)" }} />
+              <span>Run another analysis</span>
+            </button>
+          )}
+          <button
+            className="btn-editorial-secondary btn-sm"
+            onClick={handleCopy}
+            aria-label="Copy result summary to clipboard"
+          >
+            <IconCopy />
+            <span>{copied ? "Copied to Clipboard!" : "Copy Investigation"}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Primary Editorial Master Verdict Banner */}
+      <header className="verdict-head">
+        <div className="verdict-top-row">
+          <div className="verdict-badge-wrap">
+            <span className="verdict-eyebrow">FINAL VERIFICATION ASSESSMENT</span>
+            <div className="verdict-status-pill">
+              <span className="verdict-ico">
+                <VerdictIcon />
+              </span>
+              <h1 className="verdict-name">
+                <span className="verdict-lead-text">{meta.lead}</span>
+                {meta.rest}
+              </h1>
             </div>
-            {result.confidenceTier && (
-              <div className="confidence-tier-pill" title="Calibrated Confidence Tier">
-                {result.confidenceTier}
-              </div>
-            )}
+          </div>
+
+          {/* Model Confidence Metric Card */}
+          <div className="verdict-confidence-card">
+            <div className="stat-label">Model Confidence</div>
+            <div className="confidence-val-row">
+              <span className="stat-value">
+                {hasConfidence ? percent(result.confidence) : "Baseline"}
+              </span>
+              {result.confidenceTier && (
+                <span className="confidence-tier-pill" title="Calibrated Confidence Tier">
+                  {result.confidenceTier}
+                </span>
+              )}
+            </div>
             <div className="meter">
               <span style={{ width: hasConfidence ? percent(result.confidence) : "0%" }} />
             </div>
             <span className="stat-caption">Calibrated Temperature Scaling</span>
           </div>
-
-          {[
-            [IconStrength, "Evidence Strength", result.evidenceStrength || "NONE"],
-            [IconDoc, "Claim Type", result.claimType || "Factual claim"],
-            [IconGlobe, "Language", LANGUAGE_LABELS[result.language] || result.language],
-          ].map(([Icon, label, value]) => (
-            <div className="stat" key={label as string}>
-              <div className="stat-row">
-                <span className="stat-ico">
-                  <Icon />
-                </span>
-                <div className="stat-label">{label as string}</div>
-              </div>
-              <div className="stat-value stat-value-sm">{value as string}</div>
-            </div>
-          ))}
         </div>
+
+        {/* Investigated Claim Spotlight */}
+        <div className="verdict-claim-spotlight">
+          <div className="spotlight-header">
+            <span className="spotlight-tag">EXTRACTED CLAIM PROPOSITION</span>
+            <div className="spotlight-badges">
+              <span className="badge-pill">
+                <IconGlobe />
+                <span>{LANGUAGE_LABELS[result.language] || result.language}</span>
+              </span>
+              <span className="badge-pill">
+                <IconDoc />
+                <span>{result.claimType || "Factual claim"}</span>
+              </span>
+            </div>
+          </div>
+          <HighlightedClaim claim={result.claim} />
+        </div>
+
+        {/* Editorial Synthesis Summary */}
+        <p className="verdict-summary">{meta.summary}</p>
+
+        {/* Quick Telemetry Strip */}
+        <div className="verdict-telemetry-grid">
+          <div className="telemetry-item">
+            <span className="telemetry-label">
+              <IconStrength /> Evidence Strength
+            </span>
+            <span className="telemetry-val">{result.evidenceStrength || "NONE"}</span>
+          </div>
+          <div className="telemetry-item">
+            <span className="telemetry-label">
+              <IconLayers /> Sources Traced
+            </span>
+            <span className="telemetry-val">
+              {result.evidence.length} {result.evidence.length === 1 ? "Citation" : "Citations"}
+            </span>
+          </div>
+          <div className="telemetry-item">
+            <span className="telemetry-label">
+              <IconGlobe /> Language Model
+            </span>
+            <span className="telemetry-val">{LANGUAGE_LABELS[result.language] || result.language}</span>
+          </div>
+          <div className="telemetry-item">
+            <span className="telemetry-label">
+              <IconHistory /> Analyzed On
+            </span>
+            <span className="telemetry-val">{analysedOn}</span>
+          </div>
+        </div>
+
+        {/* Integrated Contextual Alert Notice */}
+        {isInsufficient && (
+          <div className="verdict-alert state-insufficient" role="status">
+            <IconInfo className="alert-ico" />
+            <div className="alert-body">
+              <strong>Insufficient Evidence:</strong>
+              <p>
+                We could not retrieve enough verified independent evidence to establish a definitive assessment.
+                In rigorous fact-checking, insufficient evidence is a legitimate outcome, not a failure.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {isConflicting && (
+          <div className="verdict-alert state-conflicting" role="status">
+            <IconAlert className="alert-ico" />
+            <div className="alert-body">
+              <strong>Conflicting Evidence Detected:</strong>
+              <p>
+                Available reputable sources genuinely disagree. Review both supporting and contradicting citations below before drawing conclusions.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {isLowConfidence && !isInsufficient && (
+          <div className="verdict-alert state-low-confidence" role="status">
+            <IconAlert className="alert-ico" />
+            <div className="alert-body">
+              <strong>Low Confidence Signal:</strong>
+              <p>
+                The model signal has high uncertainty. We strongly recommend manual review of the cited source citations.
+              </p>
+            </div>
+          </div>
+        )}
       </header>
 
-      {/* Special State Callouts */}
-      {isInsufficient && (
-        <div className="special-state-banner state-insufficient" role="status">
-          <IconInfo className="state-icon" />
-          <div className="state-text">
-            <strong>Insufficient Evidence:</strong>
-            <p>
-              We could not retrieve enough verified independent evidence to establish a definitive assessment. In objective fact-checking, insufficient evidence is a legitimate outcome, not a failure.
-            </p>
-          </div>
-        </div>
-      )}
-
-      {isConflicting && (
-        <div className="special-state-banner state-conflicting" role="status">
-          <IconAlert className="state-icon" />
-          <div className="state-text">
-            <strong>Conflicting Evidence Detected:</strong>
-            <p>
-              Available reputable sources genuinely disagree. Review both supporting and contradicting citations below before drawing conclusions.
-            </p>
-          </div>
-        </div>
-      )}
-
-      {isLowConfidence && !isInsufficient && (
-        <div className="special-state-banner state-low-confidence" role="status">
-          <IconAlert className="state-icon" />
-          <div className="state-text">
-            <strong>Low Confidence Signal:</strong>
-            <p>
-              The model signal has high uncertainty. We strongly recommend manual review of the cited source citations.
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* Action Toolbar */}
-      <div className="result-toolbar">
-        {onReset && (
-          <button
-            className="btn-editorial-primary"
-            onClick={onReset}
-            aria-label="Run another analysis"
-          >
-            <span>Run another analysis</span>
-            <IconArrow className="arrow-sm" />
-          </button>
-        )}
-        <button
-          className="btn-editorial-secondary"
-          onClick={handleCopy}
-          aria-label="Copy result summary to clipboard"
-        >
-          {copied ? "Copied to Clipboard!" : "Copy Investigation"}
-        </button>
-      </div>
-
-      {/* Columns Layout */}
+      {/* Main Investigation Columns */}
       <div className="result-cols">
-        {/* Left Column: Claim, Reasoning, Calibration */}
+        {/* Left Column: Reasoning & Calibration */}
         <div className="result-col">
-          {/* Claim Card with Span Highlighting */}
-          <section className="card">
-            <CardHead icon={IconDoc} title="Extracted Claim" />
-            <HighlightedClaim claim={result.claim} />
-            <dl className="meta-row">
-              {[
-                ["Language", LANGUAGE_LABELS[result.language] || result.language],
-                ["Claim Type", result.claimType || "Factual claim"],
-                ["Sources Traced", String(result.evidence.length)],
-                ["Analyzed On", analysedOn],
-              ].map(([label, value]) => (
-                <div key={label}>
-                  <dt>{label}</dt>
-                  <dd>{value}</dd>
-                </div>
-              ))}
-            </dl>
-          </section>
-
-          {/* Evidence Relationship Tree */}
-          <section className="card">
-            <CardHead icon={IconLayers} title="Evidence Relationship Map" note="(Claim to Sources)" />
-            <EvidenceRelationshipMap claim={result.claim} evidence={result.evidence} />
-          </section>
-
           {/* Reasoning & Decision Fusion */}
           <section className="card">
             <CardHead icon={IconBulb} title="Reasoning & Decision Trace" />
@@ -519,13 +530,12 @@ export function Result({ result, onReset }: ResultProps) {
                 </div>
               </div>
             )}
+          </section>
 
-            <p className="callout">
-              <IconInfo />
-              <span>
-                Assessment, not absolute truth. Real verification requires independent corroboration from verifiable external sources.
-              </span>
-            </p>
+          {/* Evidence Relationship Map */}
+          <section className="card">
+            <CardHead icon={IconLayers} title="Evidence Relationship Map" note="(Claim to Sources)" />
+            <EvidenceRelationshipMap claim={result.claim} evidence={result.evidence} />
           </section>
 
           {/* Confidence & Calibration Details */}
@@ -559,7 +569,7 @@ export function Result({ result, onReset }: ResultProps) {
           </section>
         </div>
 
-        {/* Right Column: Evidence Trail & Timeline */}
+        {/* Right Column: Evidence Trail & Sources */}
         <aside className="result-col">
           <section className="card card-trail">
             <CardHead
@@ -581,17 +591,37 @@ export function Result({ result, onReset }: ResultProps) {
               </>
             ) : (
               <div className="empty-trail">
+                <div className="empty-trail-badge">
+                  <IconInfo />
+                  <span>No External Sources Traced</span>
+                </div>
                 <p className="card-body">
                   No verifiable external fact-checking sources were traced for this input.
                 </p>
                 <p className="card-note hint">
                   Without verifiable citations, VeriTrace restricts certainty to <strong>Insufficient Evidence</strong>.
                 </p>
+                <div className="suggested-actions-box">
+                  <strong>Recommended Next Steps:</strong>
+                  <ul>
+                    <li>Check official press releases from the regulatory authority or institution.</li>
+                    <li>Consult verified national fact-checking registries (PIB Fact Check, Vishwas News).</li>
+                    <li>Verify if the claim relates to a fluid breaking event that is still developing.</li>
+                  </ul>
+                </div>
               </div>
             )}
           </section>
         </aside>
       </div>
+
+      {/* Unified Bottom Disclaimer */}
+      <footer className="result-footer-disclaimer">
+        <IconShield className="disclaimer-ico" />
+        <span>
+          <strong>Responsible AI Principle:</strong> Assessment, not absolute truth. Real verification requires independent corroboration from verifiable external sources.
+        </span>
+      </footer>
     </div>
   );
 }

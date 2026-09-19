@@ -5,7 +5,6 @@ import { AnalyzeWorkspace } from "./components/AnalyzeWorkspace";
 import { Result } from "./components/Result";
 import { EvidenceExplorer } from "./components/EvidenceExplorer";
 import { Intelligence } from "./components/Intelligence";
-import { Research } from "./components/Research";
 import { About } from "./components/About";
 import { Footer } from "./components/Footer";
 import { verifyClaim, fetchAnalysisById } from "./services/verificationService";
@@ -161,12 +160,6 @@ export default function App() {
                 setView("analyze");
               }}
             />
-          </div>
-        )}
-
-        {view === "research" && (
-          <div className="container">
-            <Research />
           </div>
         )}
 

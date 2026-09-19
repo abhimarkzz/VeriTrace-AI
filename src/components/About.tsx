@@ -112,6 +112,52 @@ export function About() {
             </div>
           </div>
         </section>
+
+        {/* 6. Scientific Foundations */}
+        <section className="card about-section-card full-width">
+          <span className="section-step-label">06 / SCIENTIFIC BENCHMARKS &amp; LITERATURE</span>
+          <h3>Methodology &amp; Research Foundations</h3>
+          <p>
+            VeriTrace builds on established peer-reviewed natural language processing and fact verification research:
+          </p>
+          <div className="limitations-grid" style={{ marginTop: "20px" }}>
+            <div className="limit-item">
+              <div>
+                <strong>X-Fact (Gupta &amp; Srikumar, ACL 2021)</strong>
+                <p>
+                  Demonstrated that zero-shot multilingual classification drops sharply for low-resource languages without syntactic grounding. VeriTrace therefore restricts scope to English, Hindi, and Telugu rather than ungrounded claims of universal coverage.
+                </p>
+              </div>
+            </div>
+
+            <div className="limit-item">
+              <div>
+                <strong>FEVER (Thorne et al., NAACL 2018)</strong>
+                <p>
+                  Established that classification without decoupled evidence retrieval hallucinates justifications. VeriTrace strictly decouples Evidence Retrieval from Natural Language Inference (NLI).
+                </p>
+              </div>
+            </div>
+
+            <div className="limit-item">
+              <div>
+                <strong>AVeriTeC (Schlichtkrull et al., NeurIPS 2023)</strong>
+                <p>
+                  Proved that single-source verification fails in 43% of contentious claims. VeriTrace requires multi-source evidence clustering and cross-source conflict detection.
+                </p>
+              </div>
+            </div>
+
+            <div className="limit-item">
+              <div>
+                <strong>Neural Calibration (Guo et al., ICML 2017)</strong>
+                <p>
+                  Proved modern transformers are notoriously overconfident. VeriTrace applies post-hoc temperature scaling (T &gt; 1.0) and separates raw model confidence from factual certainty.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );

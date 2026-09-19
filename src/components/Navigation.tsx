@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { IconArrow } from "./Icons";
 
-export type NavView = "home" | "analyze" | "evidence" | "intelligence" | "research" | "about";
+export type NavView = "home" | "analyze" | "evidence" | "intelligence" | "about";
 
 interface NavigationProps {
   currentView: NavView;
@@ -12,7 +12,7 @@ interface NavigationProps {
 
 export function BrandMark() {
   return (
-    <svg className="brand-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <svg className="brand-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={{ width: 22, height: 22, flexShrink: 0 }}>
       <circle cx="12" cy="12" r="10" stroke="var(--accent)" strokeWidth="1.6" />
       <path
         d="M7.5 12.4l3 3 6-6.4"
@@ -27,10 +27,8 @@ export function BrandMark() {
 
 const NAV_LINKS: Array<{ id: NavView; label: string }> = [
   { id: "home", label: "Home" },
-  { id: "analyze", label: "Analyze" },
-  { id: "evidence", label: "Evidence" },
+  { id: "evidence", label: "Evidence Explorer" },
   { id: "intelligence", label: "Intelligence" },
-  { id: "research", label: "Research" },
   { id: "about", label: "About" },
 ];
 

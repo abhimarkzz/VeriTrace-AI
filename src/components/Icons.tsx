@@ -1,15 +1,35 @@
 import type { SVGProps } from "react";
 
-const base = (props: SVGProps<SVGSVGElement>) => ({
-  viewBox: "0 0 24 24",
-  fill: "none",
-  stroke: "currentColor",
-  strokeWidth: 1.7,
-  strokeLinecap: "round" as const,
-  strokeLinejoin: "round" as const,
-  "aria-hidden": true,
-  ...props,
-});
+const base = (props: SVGProps<SVGSVGElement>) => {
+  const size = props.width ?? props.height ?? 20;
+  return {
+    width: size,
+    height: size,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.7,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    "aria-hidden": true,
+    ...props,
+    style: {
+      flexShrink: 0,
+      width: size,
+      height: size,
+      display: "inline-block",
+      verticalAlign: "middle",
+      ...props.style,
+    },
+  };
+};
+
+export const IconCopy = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...base(p)}>
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+  </svg>
+);
 
 export const IconCheck = (p: SVGProps<SVGSVGElement>) => (
   <svg {...base(p)}>

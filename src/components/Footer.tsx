@@ -37,8 +37,7 @@ export function Footer({ onNavigate }: FooterProps) {
 
             <div className="links-group">
               <strong>Foundations</strong>
-              <button onClick={() => onNavigate("research")}>Research &amp; Methodology</button>
-              <button onClick={() => onNavigate("about")}>Why VeriTrace Exists</button>
+              <button onClick={() => onNavigate("about")}>About &amp; Methodology</button>
               <a
                 href="/api/docs"
                 target="_blank"
