@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IconArrow } from "./Icons";
 
 export type NavView = "home" | "analyze" | "evidence" | "intelligence" | "about";
@@ -64,6 +64,22 @@ export function Navigation({
   isResultActive = false,
 }: NavigationProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") setMobileOpen(false);
+      };
+      window.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.body.style.overflow = "";
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    } else {
+      document.body.style.overflow = "";
+    }
+  }, [mobileOpen]);
 
   const handleNavClick = (view: NavView) => {
     setMobileOpen(false);

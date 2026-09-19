@@ -41,27 +41,29 @@ function formatDate(dateStr?: string): string {
  * Claim Span Highlighting Component
  * Highlights relevant keywords or numbers in the extracted claim.
  */
-function HighlightedClaim({ claim }: { claim: string }) {
+function HighlightedClaim({ claim = "" }: { claim?: string }) {
+  const safeClaim = claim || "";
   const parts = useMemo(() => {
+    if (!safeClaim) return [{ text: "", highlight: false }];
     const regex = /(\b(?:\d+(?:\.\d+)?%?|\d+\s*(?:percent|cr|lakh|crore|billion|million|rupees|rs\.?))\b|[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/gi;
     const tokens: Array<{ text: string; highlight: boolean }> = [];
     let lastIndex = 0;
     let match;
 
-    while ((match = regex.exec(claim)) !== null) {
+    while ((match = regex.exec(safeClaim)) !== null) {
       if (match.index > lastIndex) {
-        tokens.push({ text: claim.substring(lastIndex, match.index), highlight: false });
+        tokens.push({ text: safeClaim.substring(lastIndex, match.index), highlight: false });
       }
       tokens.push({ text: match[0], highlight: true });
       lastIndex = regex.lastIndex;
     }
 
-    if (lastIndex < claim.length) {
-      tokens.push({ text: claim.substring(lastIndex), highlight: false });
+    if (lastIndex < safeClaim.length) {
+      tokens.push({ text: safeClaim.substring(lastIndex), highlight: false });
     }
 
-    return tokens.length > 0 ? tokens : [{ text: claim, highlight: false }];
-  }, [claim]);
+    return tokens.length > 0 ? tokens : [{ text: safeClaim, highlight: false }];
+  }, [safeClaim]);
 
   return (
     <blockquote className="claim-quote">

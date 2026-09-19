@@ -59,6 +59,10 @@ class TestVeriTraceTokenizer:
     @pytest.fixture(scope="class")
     def tokenizer(self):
         """Loads XLM-RoBERTa tokenizer (cached locally)."""
+        try:
+            import transformers  # noqa: F401
+        except ImportError:
+            pytest.skip("transformers not installed in environment")
         return VeriTraceTokenizer.from_pretrained("xlm-roberta-base", max_length=64)
 
     def test_multilingual_tokenization(self, tokenizer):
@@ -176,7 +180,7 @@ class TestModelLoader:
             assert model is None
             assert tok is None
             assert info.status == ModelStatus.ML_UNAVAILABLE
-            assert "PyTorch not installed" in info.error
+            assert "PyTorch not installed" in info.error or "transformers not installed" in info.error
 
 
 # ─────────────────────────────────────────────────────────────────────────────
