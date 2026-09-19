@@ -55,7 +55,7 @@ export function Footer({ onNavigate }: FooterProps) {
             <strong>Responsible AI Principle:</strong> Assessment, not absolute truth. Model confidence reflects internal prediction strength; it does not guarantee factual certainty. Citations should be reviewed independently.
           </div>
           <div className="copyright-note">
-            VeriTrace AI · Neural Stream · Problem N5
+            © {new Date().getFullYear()} VeriTrace AI. All rights reserved.
           </div>
         </div>
       </div>

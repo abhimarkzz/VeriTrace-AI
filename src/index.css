@@ -477,6 +477,8 @@ input:focus-visible {
   z-index: 99;
   padding: 24px;
   border-top: 1px solid var(--border);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .mobile-links {
@@ -3138,6 +3140,11 @@ input:focus-visible {
   gap: 16px;
 }
 
+.copyright-note {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 .responsible-ai-note {
   max-width: 72ch;
   line-height: 1.4;
@@ -3315,6 +3322,10 @@ img, svg, video, canvas {
 
   .nav-inner {
     height: 64px;
+  }
+
+  .mobile-drawer {
+    top: 64px;
   }
 
   .hero-headline {
@@ -3619,8 +3630,21 @@ img, svg, video, canvas {
     gap: 12px;
   }
 
+  .responsible-ai-note {
+    max-width: 100%;
+  }
+
+  .copyright-note {
+    white-space: normal;
+  }
+
   .footer-languages {
     justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .footer-tagline {
+    font-size: 0.85rem;
   }
 }
 
@@ -3637,6 +3661,31 @@ img, svg, video, canvas {
 
   .editorial-title {
     font-size: 1.4rem;
+  }
+
+  /* Prevent verdict/confidence cards from overflowing */
+  .verdict-badge-wrap {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .verdict-confidence-card {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .verdict-head {
+    padding: 14px 12px;
+  }
+
+  /* Long URLs and claim text must wrap */
+  .claim-quote,
+  .verdict-name,
+  .detail-link a,
+  .source-link,
+  .source-url {
+    word-break: break-word;
+    overflow-wrap: anywhere;
   }
 
   .workspace-title {
@@ -3733,6 +3782,11 @@ img, svg, video, canvas {
 
 /* ── 6. Extra Small Devices (<= 360px / 320px) ──────────────── */
 @media (max-width: 360px) {
+  .container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
   .brand-link {
     gap: 6px;
   }
@@ -3756,6 +3810,10 @@ img, svg, video, canvas {
     font-size: 1.75rem;
   }
 
+  .hero-subtitle {
+    font-size: 0.92rem;
+  }
+
   .verdict-name {
     font-size: 1.45rem;
   }
@@ -3766,5 +3824,46 @@ img, svg, video, canvas {
 
   .flow-node .node-caption {
     display: none;
+  }
+
+  .footer-brand-col {
+    gap: 10px;
+  }
+
+  .footer-tagline {
+    font-size: 0.78rem;
+    line-height: 1.45;
+  }
+
+  .lang-pill {
+    font-size: 0.65rem;
+    padding: 3px 6px;
+  }
+
+  .links-group button,
+  .links-group a {
+    font-size: 0.82rem;
+  }
+
+  .responsible-ai-note {
+    font-size: 0.72rem;
+  }
+
+  .mode-tab {
+    padding: 6px 10px;
+    font-size: 0.72rem;
+  }
+
+  .editorial-textarea {
+    font-size: 0.92rem;
+    min-height: 100px;
+  }
+
+  .mobile-drawer {
+    padding: 18px 14px;
+  }
+
+  .mobile-link {
+    font-size: 1.1rem;
   }
 }
