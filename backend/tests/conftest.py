@@ -60,6 +60,8 @@ from app.core.config import settings
 app.db.session.engine = test_engine
 app.db.session.async_session_factory = TestSessionFactory
 settings.database_url = TEST_DATABASE_URL
+settings.app_env = "development"
+settings.evidence_enable_offline_fallback = True
 settings.google_factcheck_api_key = None
 settings.model_load_on_startup = False
 

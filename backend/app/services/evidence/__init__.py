@@ -13,6 +13,7 @@ from app.services.evidence.base import (
     sanitize_evidence_url,
 )
 from app.services.evidence.google_factcheck import GoogleFactCheckProvider
+from app.services.evidence.live_news_provider import LiveNewsEvidenceProvider
 from app.services.evidence.local_provider import LocalEvidenceProvider
 from app.services.evidence.retrieval import (
     EvidenceCache,
@@ -50,6 +51,7 @@ __all__ = [
     "EvidenceRetrievalResult",
     "GoogleFactCheckProvider",
     "LanguageCoverageValidator",
+    "LiveNewsEvidenceProvider",
     "LocalEvidenceProvider",
     "MultilingualDeterministicNLI",
     "NLIModel",

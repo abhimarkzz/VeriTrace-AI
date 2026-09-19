@@ -455,4 +455,4 @@ class TestPipelineEvidenceIntegration:
             ev_event = pe_query.scalars().first()
             assert ev_event is not None
             assert ev_event.status in ("completed", "offline_fallback")
-            assert ev_event.metadata_["provider"] in ("local_evidence_fixtures", "google_factcheck")
+            assert ev_event.metadata_["provider"] in ("local_evidence_fixtures", "google_factcheck", "live_news")

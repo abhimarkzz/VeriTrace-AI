@@ -145,6 +145,11 @@ def normalize_to_evidence_item(evidence: NormalizedEvidence, index: int) -> Evid
     )
 
 
+from app.services.evidence.google_factcheck import GoogleFactCheckProvider
+from app.services.evidence.live_news_provider import LiveNewsEvidenceProvider
+from app.services.evidence.local_provider import LocalEvidenceProvider
+
+
 def get_active_provider(force_provider: Optional[str] = None) -> EvidenceProvider:
     """Resolve the active evidence provider based on settings and environment."""
     provider_type = force_provider or settings.evidence_provider
@@ -152,7 +157,10 @@ def get_active_provider(force_provider: Optional[str] = None) -> EvidenceProvide
     if provider_type == "local":
         return LocalEvidenceProvider(allow_in_production=False)
 
-    # Default: Google Fact Check
+    if provider_type == "live_news":
+        return LiveNewsEvidenceProvider(timeout=settings.evidence_timeout_seconds)
+
+    # Google Fact Check Provider
     google_provider = GoogleFactCheckProvider(
         api_key=settings.google_factcheck_api_key,
         timeout=settings.evidence_timeout_seconds,
@@ -162,15 +170,8 @@ def get_active_provider(force_provider: Optional[str] = None) -> EvidenceProvide
     if google_provider.is_available:
         return google_provider
 
-    # If Google API key is missing:
-    if settings.evidence_enable_offline_fallback or settings.is_development:
-        logger.warning(
-            "GOOGLE_FACTCHECK_API_KEY missing — falling back to LocalEvidenceProvider (DEMO / OFFLINE MODE)"
-        )
-        return LocalEvidenceProvider(allow_in_production=settings.evidence_enable_offline_fallback)
-
-    # In strict production without key, return unconfigured google provider to fail honestly
-    return google_provider
+    # If Google API key is missing, default to live real-world news & encyclopedia provider
+    return LiveNewsEvidenceProvider(timeout=settings.evidence_timeout_seconds)
 
 
 async def retrieve_evidence(
@@ -182,9 +183,10 @@ async def retrieve_evidence(
     skip_cache: bool = False,
 ) -> EvidenceRetrievalResult:
     """
-    Retrieve external evidence for a claim.
+    Retrieve external evidence for a claim using real-world sources.
 
-    Checks cache, selects provider, queries provider, and sanitizes output.
+    Checks cache, queries live news/fact-check providers, deduplicates,
+    and falls back gracefully to offline fixtures if network is unavailable.
     """
     cleaned_query = sanitize_evidence_text(query, max_length=300)
     if not cleaned_query:
@@ -202,10 +204,10 @@ async def retrieve_evidence(
             logger.info("Evidence cache HIT for query '%s' (lang=%s)", cleaned_query[:40], language)
             return cached
 
-    # Run retrieval
+    # Resolve primary provider
     provider = get_active_provider(force_provider=force_provider)
     logger.info(
-        "Retrieving evidence for query '%s' via provider '%s' (lang=%s)",
+        "Retrieving real evidence for query '%s' via provider '%s' (lang=%s)",
         cleaned_query[:40], provider.name, language,
     )
 
@@ -216,8 +218,39 @@ async def retrieve_evidence(
         page_token=page_token,
     )
 
+    # If primary provider returned 0 results and it wasn't already live news, query live news
+    if (not result.items or len(result.items) == 0) and provider.name != "live_news" and force_provider is None:
+        try:
+            live_provider = LiveNewsEvidenceProvider(timeout=settings.evidence_timeout_seconds)
+            live_res = live_provider.search(
+                query=cleaned_query,
+                language=language,
+                page_size=page_size,
+                page_token=page_token,
+            )
+            if live_res.items:
+                result = live_res
+        except Exception as e:
+            logger.warning("Live news secondary retrieval error: %s", e)
+
+    # If still no items and offline fallback is permitted, query local test fixtures
+    if (not result.items or len(result.items) == 0) and (settings.evidence_enable_offline_fallback or settings.is_development):
+        try:
+            local_provider = LocalEvidenceProvider(allow_in_production=settings.evidence_enable_offline_fallback)
+            local_res = local_provider.search(
+                query=cleaned_query,
+                language=language,
+                page_size=page_size,
+                page_token=page_token,
+            )
+            if local_res.items:
+                result = local_res
+        except Exception as e:
+            logger.warning("Local fixtures fallback error: %s", e)
+
     # Cache successful results
     if not skip_cache and not result.error and result.items:
         evidence_cache.set(cleaned_query, language, result, page_token)
 
     return result
+

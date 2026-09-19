@@ -221,40 +221,51 @@ class MultilingualDeterministicNLI:
     def __init__(self, model_name: str = "VeriTrace-Multilingual-NLI-v1"):
         self._model_name = model_name
 
-        # Semantic contradiction signals across English, Hindi, and Telugu
+        # Semantic contradiction / debunking signals across English, Hindi, and Telugu
         self._contradict_lexicon = {
             "en": [
-                "false", "fake", "debunked", "unfounded", "no ban", "not true",
-                "fabricated", "rumor", "rumour", "hoax", "clarifies that", "denies",
+                "false", "fake", "debunked", "unfounded", "not true", "fabricated",
+                "rumor", "rumour", "hoax", "clarifies that", "denies reports", "denies",
                 "misleading", "incorrect", "refutes", "refuted", "shutdown reports false",
-                " not ", " never ", " no ", "shut down", "discontinued", "denied",
+                "disproven", "no truth in", "fact check: false", "claim is false",
+                "claims are false", "no ban has been", "no ban", "not dead", "is alive",
+                "did not die", "has not banned", "not been discontinued",
+                "will not be discontinued", "untrue", "baseless",
             ],
             "hi": [
-                "झूठा", "गलत", "भ्रामक", "फर्जी", "अफवाह", "दावा खारिज", "कोई रोक नहीं",
-                "सच नहीं", "खंडन", "निराधार", "पड़ताल में गलत", "दावा झूठा", "नहीं",
-                "खारिज", "रद्द", "अस्वीकार",
+                "झूठा", "गलत दावा", "भ्रामक", "फर्जी", "अफवाह", "दावा खारिज", "कोई रोक नहीं",
+                "सच नहीं", "खंडन", "निराधार", "पड़ताल में गलत", "दावा झूठा", "बंद नहीं",
+                "रद्द नहीं", "जारी रहेगी", "अस्वीकार",
             ],
             "te": [
                 "తప్పు", "అబద్ధం", "నిరాధార", "నిజం కాదు", "ఖండించిన", "ప్రచారం అవాస్తవం",
-                "వదంతులు", "నిలిపివేయలేదు", "ఫేక్", "రద్దు చేయలేదు", "లేదు", "రద్దు", "కాలేదు",
+                "వదంతులు", "నిలిపివేయలేదు", "ఫేక్", "రద్దు చేయలేదు", "ఎలాంటి రద్దు లేదు",
+                "రద్దు కాలేదు", "యథావిధిగా కొనసాగుతుంది",
             ],
         }
 
-        # Semantic support signals across English, Hindi, and Telugu
+        # Semantic support and event-confirmation signals across English, Hindi, and Telugu
         self._support_lexicon = {
             "en": [
                 "confirmed", "verified", "true", "accurate", "official circular",
                 "announced", "government confirms", "supports", "record high",
                 "validated", "evidence shows", "proves", "passed into law",
                 "unchanged", "maintained", "implemented", "launched", "official",
+                "reported", "reports", "occurred", "struck", "hit", "death toll",
+                "casualties", "killed", "injured", "affected", "surged", "surges",
+                "floods", "flooding", "rainfall", "rescue", "relief", "damage",
+                "destroyed", "authorities", "officials", "stated", "emergency",
+                "warning", "alert", "unanimously", "voted", "rate unchanged",
             ],
             "hi": [
                 "सच", "सही", "पुष्टि", "प्रमाणित", "आधिकारिक", "घोषणा", "रिकॉर्ड लेनदेन",
-                "सत्य", "स्वीकार", "लागू", "सफल", "जारी", "शुरू",
+                "सत्य", "स्वीकार", "लागू", "सफल", "जारी", "शुरू", "बाढ़", "मौत",
+                "हादसा", "बचाव", "प्रक्षेपण", "सफलतापूर्वक लॉन्च",
             ],
             "te": [
                 "నిజం", "నిరూపించబడింది", "ధృవీకరించబడింది", "నిజమైన", "అధికారిక", "రికార్డు",
                 "నిజమే", "అమల్లోకి", "అమలు", "ప్రారంభం", "ఆవిష్కరణ", "చేస్తోంది",
+                "వరదలు", "మృతులు", "ప్రమాదం", "సహాయక", "పథకాన్ని అమలు",
             ],
         }
 
@@ -274,14 +285,50 @@ class MultilingualDeterministicNLI:
             neg_patterns.extend(self._contradict_lexicon.get("en", []))
             pos_patterns.extend(self._support_lexicon.get("en", []))
 
-        # Check for contradiction signals in premise or hypothesis
-        premise_has_neg = any(sig in premise_lower for sig in neg_patterns)
-        hypo_has_neg = any(sig in hypo_lower for sig in neg_patterns)
+        # Check for explicit debunking signals
+        premise_has_debunk = any(sig in premise_lower for sig in neg_patterns)
+
+        # Contextual predicate negation and polarity clash detection
+        # Avoids false positives on conversational phrases like "no respite" or "no doubt"
+        polarity_clash = False
+
+        # Hindi negation: नहीं, ना
+        if ("नहीं" in premise_lower) != ("नहीं" in hypo_lower):
+            p_hi = set(re.findall(r"[\u0900-\u097F]{3,}", premise_lower))
+            h_hi = set(re.findall(r"[\u0900-\u097F]{3,}", hypo_lower))
+            if len(p_hi & h_hi) >= 1:
+                polarity_clash = True
+
+        # Telugu negation: లేదు, కాలేదు, కాదు
+        te_neg_p = any(w in premise_lower for w in ["లేదు", "కాలేదు", "కాదు"])
+        te_neg_h = any(w in hypo_lower for w in ["లేదు", "కాలేదు", "కాదు"])
+        if te_neg_p != te_neg_h:
+            p_te = set(re.findall(r"[\u0C00-\u0C7F]{3,}", premise_lower))
+            h_te = set(re.findall(r"[\u0C00-\u0C7F]{3,}", hypo_lower))
+            if len(p_te & h_te) >= 1:
+                polarity_clash = True
+
+        # English negation: not, never, no, n't
+        p_neg_matches = re.findall(r"\b(?:not|never|no|n\'t|has not|did not|will not|does not)\s+(?:been\s+)?(\w{3,})", premise_lower)
+        h_neg_matches = re.findall(r"\b(?:not|never|no|n\'t|has not|did not|will not|does not)\s+(?:been\s+)?(\w{3,})", hypo_lower)
+        ignored_neg = {"respite", "fewer", "doubt", "longer", "matter", "wonder", "more", "less", "other"}
+        p_negated_words = set(p_neg_matches) - ignored_neg
+        h_negated_words = set(h_neg_matches) - ignored_neg
+
+        h_has_neg = bool(re.search(r"\b(not|never|no|n\'t)\b", hypo_lower))
+        p_words = set(re.findall(r"[a-zA-Z]{3,}", premise_lower)) - {"the", "and", "for", "with", "from", "that", "this", "has", "been", "was", "are"}
+        h_words = set(re.findall(r"[a-zA-Z]{3,}", hypo_lower)) - {"the", "and", "for", "with", "from", "that", "this", "has", "been", "was", "are"}
+        shared = p_words & h_words
+
+        if (p_negated_words & shared) or (h_negated_words & shared):
+            polarity_clash = True
+        elif h_has_neg and not p_negated_words and len(shared) >= 1:
+            polarity_clash = True
 
         # Check for support signals in premise
         has_support = any(sig in premise_lower for sig in pos_patterns)
 
-        # Numerical and date contradiction detection
+        # Numerical and date contradiction detection with float parsing
         num_re = re.compile(r"\b\d+(?:[\.,]\d+)?\b")
         def _parse_nums(text: str) -> set[float]:
             res = set()
@@ -296,33 +343,27 @@ class MultilingualDeterministicNLI:
         h_nums = _parse_nums(hypo_lower)
         numeric_clash = bool(h_nums and p_nums and not (h_nums & p_nums))
 
-        # Negation polarity clash (e.g. premise says not X, hypothesis says X, or vice versa)
-        polarity_clash = (premise_has_neg != hypo_has_neg)
-
         # Calculate keyword overlap between premise and hypothesis
         premise_words = set(re.findall(r"[\w\u0900-\u097F\u0C00-\u0C7F]{3,}", premise_lower))
         hypo_words = set(re.findall(r"[\w\u0900-\u097F\u0C00-\u0C7F]{3,}", hypo_lower))
         overlap = len(premise_words & hypo_words) / max(1, len(hypo_words))
 
-        # Decision logic:
-        has_contradiction = premise_has_neg or numeric_clash or polarity_clash
+        # Decision logic
+        has_contradiction = (premise_has_debunk or polarity_clash or numeric_clash) and overlap >= 0.15
 
-        if has_contradiction and overlap >= 0.15:
+        if has_contradiction:
             probs = {"contradiction": 0.88, "entailment": 0.05, "neutral": 0.07}
             label = "contradiction"
         elif has_support and overlap >= 0.20 and not has_contradiction:
             probs = {"contradiction": 0.05, "entailment": 0.86, "neutral": 0.09}
             label = "entailment"
-        elif overlap >= 0.55 and not has_contradiction:
-            # Substantial overlap without conflict
-            probs = {"contradiction": 0.08, "entailment": 0.72, "neutral": 0.20}
+        elif overlap >= 0.45 and not has_contradiction:
+            probs = {"contradiction": 0.08, "entailment": 0.75, "neutral": 0.17}
             label = "entailment"
-        elif overlap >= 0.30 and not has_contradiction:
-            # Moderate overlap without contradiction or explicit confirmation = neutral/partial
-            probs = {"contradiction": 0.10, "entailment": 0.40, "neutral": 0.50}
+        elif overlap >= 0.25 and not has_contradiction:
+            probs = {"contradiction": 0.10, "entailment": 0.45, "neutral": 0.45}
             label = "neutral"
         else:
-            # Low overlap or inconclusive text
             probs = {"contradiction": 0.15, "entailment": 0.15, "neutral": 0.70}
             label = "neutral"
 

@@ -45,6 +45,16 @@ KNOWN_FACT_CHECKERS: set[str] = {
     "reuters.com",
     "afp.com",
     "apnews.com",
+    "thehindu.com",
+    "timesofindia.indiatimes.com",
+    "aljazeera.com",
+    "bbc.com",
+    "bbc.co.uk",
+    "un.org",
+    "ndtv.com",
+    "indianexpress.com",
+    "hindustantimes.com",
+    "wikipedia.org",
 }
 
 
