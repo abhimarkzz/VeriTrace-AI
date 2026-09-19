@@ -1,0 +1,750 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "VeriTrace AI",
+    "description": "Multilingual, evidence-grounded misinformation verification API. Accepts claims in English, Hindi, and Telugu, retrieves evidence, and returns a structured assessment with a full evidence trail.",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Liveness health check",
+        "description": "Returns basic application liveness and subsystem status.",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Health Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/readiness": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Readiness health check",
+        "description": "Returns 200 OK when ready to receive traffic, or 503 Service Unavailable if database is unreachable.",
+        "operationId": "readiness_readiness_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Readiness Readiness Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/model-health": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Model health check",
+        "description": "Returns status and configuration of the active ML and NLI inference models.",
+        "operationId": "model_health_endpoint_model_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Model Health Endpoint Model Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/health": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Liveness health check",
+        "description": "Returns basic application liveness and subsystem status.",
+        "operationId": "health_api_v1_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Health Api V1 Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/readiness": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Readiness health check",
+        "description": "Returns 200 OK when ready to receive traffic, or 503 Service Unavailable if database is unreachable.",
+        "operationId": "readiness_api_v1_readiness_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Readiness Api V1 Readiness Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/model-health": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Model health check",
+        "description": "Returns status and configuration of the active ML and NLI inference models.",
+        "operationId": "model_health_endpoint_api_v1_model_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Model Health Endpoint Api V1 Model Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/analyze": {
+      "post": {
+        "tags": [
+          "analysis"
+        ],
+        "summary": "Analyze a claim",
+        "description": "Submit text for verification. The service extracts the claim, retrieves evidence, and returns a structured assessment.",
+        "operationId": "analyze_api_v1_analyze_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalysisRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or unsupported language",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/analysis/{analysis_id}": {
+      "get": {
+        "tags": [
+          "analysis"
+        ],
+        "summary": "Retrieve a stored analysis",
+        "description": "Fetch a previously completed analysis by its ID.",
+        "operationId": "get_analysis_by_id_api_v1_analysis__analysis_id__get",
+        "parameters": [
+          {
+            "name": "analysis_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Analysis Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Analysis not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnalysisRequest": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Text",
+            "description": "The text to analyze — a claim, article, social-media post, or message"
+          },
+          "language": {
+            "$ref": "#/components/schemas/Language",
+            "description": "Language of the input text, or 'auto' for detection",
+            "default": "auto"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "AnalysisRequest",
+        "description": "Incoming analysis request from the frontend.",
+        "example": {
+          "language": "auto",
+          "text": "India has banned UPI payments and the service has been shut down."
+        }
+      },
+      "AnalysisResponse": {
+        "properties": {
+          "analysis_id": {
+            "type": "string",
+            "title": "Analysis Id",
+            "description": "Unique identifier for this analysis run"
+          },
+          "language": {
+            "type": "string",
+            "title": "Language",
+            "description": "Detected or specified language code"
+          },
+          "claim": {
+            "type": "string",
+            "title": "Claim",
+            "description": "The factual claim extracted from the input"
+          },
+          "claim_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Claim Type",
+            "description": "Classification of the claim (e.g. 'Statistical claim')"
+          },
+          "assessment": {
+            "$ref": "#/components/schemas/Assessment",
+            "description": "Verdict of the analysis"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Confidence",
+            "description": "Overall confidence score (null until real models run)"
+          },
+          "confidence_breakdown": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConfidenceBreakdown"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Granular confidence sub-scores"
+          },
+          "confidence_tier": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Confidence Tier",
+            "description": "Qualitative confidence label (HIGH CONFIDENCE, MODERATE CONFIDENCE, LOW CONFIDENCE)"
+          },
+          "confidence_explanation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Confidence Explanation",
+            "description": "Transparent explanation of uncertainty and signal fusion"
+          },
+          "evidence_strength": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/EvidenceStrength"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Qualitative strength of assembled evidence"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/EvidenceItem"
+            },
+            "type": "array",
+            "title": "Evidence",
+            "description": "Evidence items traced for this claim"
+          },
+          "explanation": {
+            "type": "string",
+            "title": "Explanation",
+            "description": "Human-readable explanation of the assessment"
+          },
+          "pipeline_status": {
+            "$ref": "#/components/schemas/PipelineStatus",
+            "description": "Status of the analysis pipeline"
+          }
+        },
+        "type": "object",
+        "required": [
+          "analysis_id",
+          "language",
+          "claim",
+          "assessment",
+          "explanation",
+          "pipeline_status"
+        ],
+        "title": "AnalysisResponse",
+        "description": "Full analysis result returned to the frontend.",
+        "example": {
+          "analysis_id": "a1b2c3d4e5f6",
+          "assessment": "INSUFFICIENT_EVIDENCE",
+          "claim": "India has banned UPI payments.",
+          "evidence": [],
+          "explanation": "No AI model or evidence retrieval service is configured yet. This is a placeholder response from the analysis pipeline.",
+          "language": "en",
+          "pipeline_status": "completed"
+        }
+      },
+      "Assessment": {
+        "type": "string",
+        "enum": [
+          "SUPPORTED",
+          "POTENTIALLY_MISLEADING",
+          "INSUFFICIENT_EVIDENCE",
+          "CONFLICTING_EVIDENCE"
+        ],
+        "title": "Assessment",
+        "description": "Possible verdict outcomes."
+      },
+      "ConfidenceBreakdown": {
+        "properties": {
+          "evidence_agreement": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Evidence Agreement"
+          },
+          "evidence_relevance": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Evidence Relevance"
+          },
+          "source_quality": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Quality"
+          },
+          "model_confidence": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Confidence"
+          },
+          "probabilities": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "number"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Probabilities",
+            "description": "Per-class probability distribution"
+          }
+        },
+        "type": "object",
+        "title": "ConfidenceBreakdown",
+        "description": "Granular confidence sub-scores (populated when real models run)."
+      },
+      "ErrorResponse": {
+        "properties": {
+          "error": {
+            "type": "string",
+            "title": "Error",
+            "description": "Machine-readable error code"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "Human-readable error message"
+          },
+          "request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Request Id",
+            "description": "Request trace ID"
+          }
+        },
+        "type": "object",
+        "required": [
+          "error",
+          "message"
+        ],
+        "title": "ErrorResponse",
+        "description": "Structured error returned on validation or processing failure."
+      },
+      "EvidenceItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "Unique identifier for this evidence item"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "description": "Article or page title"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "description": "Publication or website name"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url",
+            "description": "Direct URL to the source"
+          },
+          "snippet": {
+            "type": "string",
+            "title": "Snippet",
+            "description": "Relevant excerpt from the source"
+          },
+          "relevance_score": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Relevance Score",
+            "description": "How relevant this source is to the claim"
+          },
+          "source_quality": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Source Quality",
+            "description": "Assessed quality/reliability of the source"
+          },
+          "relation": {
+            "$ref": "#/components/schemas/Relation",
+            "description": "Whether this evidence supports, contradicts, or is insufficient"
+          },
+          "publisher": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Publisher",
+            "description": "Publisher or media outlet name if available"
+          },
+          "published_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Published At",
+            "description": "Publication timestamp or date string if available"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "source",
+          "url",
+          "snippet",
+          "relevance_score",
+          "source_quality",
+          "relation"
+        ],
+        "title": "EvidenceItem",
+        "description": "A single piece of retrieved evidence with its evaluation.",
+        "example": {
+          "id": "example-001",
+          "relation": "SUPPORT",
+          "relevance_score": 0.85,
+          "snippet": "The relevant excerpt from the article...",
+          "source": "Example News",
+          "source_quality": 0.78,
+          "title": "Example Article Title",
+          "url": "https://example.com/article"
+        }
+      },
+      "EvidenceStrength": {
+        "type": "string",
+        "enum": [
+          "WEAK",
+          "MODERATE",
+          "STRONG"
+        ],
+        "title": "EvidenceStrength",
+        "description": "Qualitative strength of the assembled evidence."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Language": {
+        "type": "string",
+        "enum": [
+          "auto",
+          "en",
+          "hi",
+          "te"
+        ],
+        "title": "Language",
+        "description": "Supported analysis languages."
+      },
+      "PipelineStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "running",
+          "completed",
+          "failed"
+        ],
+        "title": "PipelineStatus",
+        "description": "Overall status of the analysis pipeline."
+      },
+      "Relation": {
+        "type": "string",
+        "enum": [
+          "SUPPORT",
+          "CONTRADICT",
+          "INSUFFICIENT"
+        ],
+        "title": "Relation",
+        "description": "How a piece of evidence relates to the claim."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

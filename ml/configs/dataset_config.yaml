@@ -1,0 +1,98 @@
+# VeriTrace AI — Dataset Pipeline Configuration
+#
+# Each dataset entry documents: source, access method, languages, and labels.
+# This config drives the download.py and normalize.py scripts.
+
+datasets:
+  xfact:
+    source: "utahnlp/x-fact"
+    type: huggingface
+    description: "Multilingual fact verification — 31,189 claims across 25 languages"
+    license: "Research use (ACL 2021)"
+    languages:
+      - ar
+      - bg
+      - de
+      - en
+      - es
+      - fa
+      - fr
+      - ge
+      - hi
+      - hu
+      - id
+      - it
+      - ja
+      - ka
+      - ko
+      - nl
+      - no
+      - pl
+      - pt
+      - ro
+      - ru
+      - sq
+      - sr
+      - ta
+      - tr
+    labels:
+      - "true"
+      - "mostly_true"
+      - "half_true"
+      - "mostly_false"
+      - "false"
+      - "unverifiable"
+      - "other"
+    claim_field: "claim"
+    label_field: "label"
+    language_field: "language"
+
+  fever:
+    source: "fever/fever"
+    type: huggingface
+    config: "v1.0"
+    description: "Fact Extraction and VERification — 185,445 English claims"
+    license: "CC BY-SA 3.0"
+    languages:
+      - en
+    labels:
+      - "SUPPORTS"
+      - "REFUTES"
+      - "NOT ENOUGH INFO"
+    claim_field: "claim"
+    label_field: "label"
+    language_field: null  # all English
+
+  averitec:
+    source: "chenxwh/AVeriTeC"
+    type: json_download
+    description: "Real-world claim verification with web evidence"
+    license: "CC BY-SA 4.0"
+    languages:
+      - en
+    labels:
+      - "Supported"
+      - "Refuted"
+      - "Not Enough Evidence"
+      - "Conflicting Evidence/Cherry-picking"
+    claim_field: "claim"
+    label_field: "label"
+    language_field: null  # all English
+
+# ── Split Configuration ─────────────────────────────────────────────────
+
+split:
+  train: 0.70
+  val: 0.15
+  test: 0.15
+  seed: 42
+  stratify_by:
+    - mapped_label
+    - language
+
+# ── VeriTrace Target Languages ──────────────────────────────────────────
+
+target_languages:
+  - en
+  - hi
+  - te

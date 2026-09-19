@@ -63,4 +63,7 @@ export const RELATION_META: Record<Relation, { label: string; color: string; sof
   INSUFFICIENT: { label: "Not conclusive", color: "var(--neutral)", soft: "var(--neutral-soft)" },
 };
 
-export const percent = (value: number): string => `${Math.round(value * 100)}%`;
+export const percent = (value?: number | null): string => {
+  if (value === null || value === undefined || isNaN(value)) return "N/A";
+  return `${Math.round(value * 100)}%`;
+};

@@ -1,0 +1,51 @@
+# VeriTrace ML Model Configuration
+#
+# This config is for documentation and the training scripts.
+# Runtime model selection is via environment variables (config.py).
+
+model:
+  base_name: "FacebookAI/xlm-roberta-base"
+  num_labels: 4
+  max_length: 256
+  labels:
+    - SUPPORTED
+    - POTENTIALLY_MISLEADING
+    - INSUFFICIENT_EVIDENCE
+    - CONFLICTING_EVIDENCE
+
+training:
+  epochs: 3
+  batch_size: 16
+  learning_rate: 2.0e-5
+  warmup_ratio: 0.1
+  weight_decay: 0.01
+  seed: 42
+  freeze_encoder: false  # Set true for CPU-only / limited memory
+
+  # Lightweight mode for laptops without GPU
+  lightweight:
+    epochs: 2
+    batch_size: 8
+    learning_rate: 3.0e-5
+    freeze_encoder: true
+
+evaluation:
+  batch_size: 32
+  metrics:
+    - accuracy
+    - precision
+    - recall
+    - macro_f1
+    - per_class_f1
+    - per_language_f1
+
+device:
+  # "auto" selects: cuda > mps > cpu
+  default: "auto"
+  # Force CPU for training on laptops
+  cpu_fallback: true
+
+data:
+  train: "data/processed/train.jsonl"
+  val: "data/processed/val.jsonl"
+  test: "data/processed/test.jsonl"

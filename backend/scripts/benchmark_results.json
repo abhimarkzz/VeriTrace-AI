@@ -1,0 +1,84 @@
+{
+  "timestamp": "2026-09-19T17:21:31.487926+00:00",
+  "components": {
+    "text_normalization": {
+      "mean_ms": 0.033,
+      "median_ms": 0.029,
+      "p95_ms": 0.05,
+      "p99_ms": 0.087,
+      "min_ms": 0.024,
+      "max_ms": 0.101
+    },
+    "language_detection": {
+      "mean_ms": 9.556,
+      "median_ms": 1.722,
+      "p95_ms": 4.682,
+      "p99_ms": 163.487,
+      "min_ms": 0.473,
+      "max_ms": 228.35
+    },
+    "claim_extraction": {
+      "mean_ms": 48.683,
+      "median_ms": 2.121,
+      "p95_ms": 8.322,
+      "p99_ms": 985.362,
+      "min_ms": 0.043,
+      "max_ms": 1384.227
+    },
+    "retrieval_uncached": {
+      "mean_ms": 0.229,
+      "median_ms": 0.227,
+      "p95_ms": 0.284,
+      "p99_ms": 0.301,
+      "min_ms": 0.187,
+      "max_ms": 0.305
+    },
+    "retrieval_cached": {
+      "mean_ms": 0.188,
+      "median_ms": 0.175,
+      "p95_ms": 0.321,
+      "p99_ms": 0.333,
+      "min_ms": 0.071,
+      "max_ms": 0.336
+    },
+    "nli_verification": {
+      "mean_ms": 0.067,
+      "median_ms": 0.052,
+      "p95_ms": 0.1,
+      "p99_ms": 0.301,
+      "min_ms": 0.046,
+      "max_ms": 0.383
+    },
+    "decision_fusion": {
+      "mean_ms": 0.133,
+      "median_ms": 0.129,
+      "p95_ms": 0.192,
+      "p99_ms": 0.201,
+      "min_ms": 0.097,
+      "max_ms": 0.203
+    }
+  },
+  "api_endpoint": {
+    "total_requests": 30,
+    "success_rate_percent": 100.0,
+    "mean_ms": 46.23,
+    "median_ms": 48.03,
+    "p95_ms": 60.99,
+    "p99_ms": 64.43,
+    "min_ms": 28.66,
+    "max_ms": 65.53
+  },
+  "concurrency": {
+    "concurrency_level": 5,
+    "total_requests": 25,
+    "total_duration_seconds": 1.959,
+    "throughput_req_per_sec": 12.76,
+    "successful_requests": 25,
+    "failed_requests": 0,
+    "error_rate_percent": 0.0,
+    "mean_latency_ms": 339.13,
+    "median_latency_ms": 125.62,
+    "p95_latency_ms": 1231.4,
+    "max_latency_ms": 1717.03
+  }
+}

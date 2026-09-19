@@ -1,10 +1,9 @@
 /**
- * Curated demo scenarios.
+ * DEVELOPMENT AND TEST FIXTURES ONLY
  *
- * Every source below is a real, resolvable article and every snippet is copied
- * verbatim from it. Nothing here is invented, and no quote is attributed to an
- * organisation that did not publish it — a tool about misinformation cannot
- * demo itself on fabricated citations. The numeric scores are illustrative.
+ * This file contains sample prompt inputs and offline fixture scenarios
+ * for development and testing. It is REMOVED from the production verification path;
+ * production verification calls the FastAPI backend (/api/v1/analyze).
  */
 
 import type { EvidenceItem, Language, VerificationResult } from "../types";

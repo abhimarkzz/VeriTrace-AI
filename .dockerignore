@@ -1,0 +1,15 @@
+node_modules
+dist
+.git
+.gitignore
+.env
+*.log
+.pytest_cache
+__pycache__
+*.pyc
+backend/venv
+backend/.pytest_cache
+backend/veritrace_dev.db
+models
+data/raw
+.DS_Store

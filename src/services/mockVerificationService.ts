@@ -1,14 +1,25 @@
+/**
+ * DEVELOPMENT AND TEST FIXTURE ONLY
+ *
+ * This mock verification service is strictly preserved for unit tests
+ * (e.g. mockVerificationService.test.ts) and is REMOVED from the production
+ * verification path. Production uses src/services/verificationService.ts.
+ */
+
 import { SCENARIOS, UNKNOWN_CLAIM_RESULT } from "../mock/demoClaims";
 import { STAGES, type Stage, type VerificationResult } from "../types";
 
-// Tuned so the pipeline reads as deliberate work rather than a stalled page.
+// Tuned so tests and offline demonstrations can walk through the 9 stages if needed.
 const STAGE_DURATIONS: Record<Stage, number> = {
-  "Detecting language": 500,
-  "Extracting claim": 700,
-  "Understanding claim": 600,
-  "Searching for evidence": 1200,
-  "Comparing evidence": 900,
-  "Generating assessment": 600,
+  "Receiving input": 100,
+  "Detecting language": 100,
+  "Extracting claims": 100,
+  "Running multilingual model": 100,
+  "Retrieving evidence": 100,
+  "Ranking evidence": 100,
+  "Verifying evidence": 100,
+  "Computing confidence": 100,
+  "Preparing explanation": 100,
 };
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));

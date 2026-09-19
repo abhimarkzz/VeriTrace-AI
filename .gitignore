@@ -3,3 +3,17 @@ dist/
 *.tsbuildinfo
 .env
 .vercel
+
+# Python / Backend
+backend/venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+*.db
+
+# ML / Data
+data/
+models/
+*.pt
+*.bin

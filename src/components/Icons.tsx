@@ -105,3 +105,52 @@ export const IconArrow = (p: SVGProps<SVGSVGElement>) => (
     <path d="M4 10h11M11 6l4 4-4 4" />
   </svg>
 );
+
+export const IconSearch = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...base(p)}>
+    <circle cx="11" cy="11" r="8" />
+    <path d="M21 21l-4.35-4.35" />
+  </svg>
+);
+
+export const IconFilter = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...base(p)}>
+    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+  </svg>
+);
+
+export const IconHistory = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...base(p)}>
+    <circle cx="12" cy="12" r="10" />
+    <polyline points="12 6 12 12 16 14" />
+  </svg>
+);
+
+export const IconBook = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...base(p)}>
+    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+  </svg>
+);
+
+export const IconShield = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...base(p)}>
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+  </svg>
+);
+
+export const IconNetwork = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...base(p)}>
+    <rect x="2" y="2" width="6" height="6" rx="1" />
+    <rect x="16" y="2" width="6" height="6" rx="1" />
+    <rect x="9" y="16" width="6" height="6" rx="1" />
+    <path d="M5 8v3a2 2 0 002 2h10a2 2 0 002-2V8M12 13v3" />
+  </svg>
+);
+
+export const IconClose = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...base(p)}>
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);

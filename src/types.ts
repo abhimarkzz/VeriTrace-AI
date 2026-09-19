@@ -14,39 +14,61 @@ export interface EvidenceItem {
   id: string;
   title: string;
   source: string;
+  publisher?: string;
   url: string;
   snippet: string;
   relevanceScore: number;
   sourceQuality: number;
   relation: Relation;
+  publishedAt?: string;
 }
 
 export interface ConfidenceBreakdown {
-  evidenceAgreement: number;
-  evidenceRelevance: number;
-  sourceQuality: number;
-  modelConfidence: number;
+  evidenceAgreement?: number;
+  evidenceRelevance?: number;
+  sourceQuality?: number;
+  modelConfidence?: number;
+  probabilities?: Record<string, number>;
 }
 
 export interface VerificationResult {
+  analysisId?: string;
   claim: string;
   language: Language;
   claimType: string;
   assessment: Assessment;
-  confidence: number;
-  confidenceBreakdown: ConfidenceBreakdown;
-  evidenceStrength: EvidenceStrength;
+  confidence: number | null;
+  confidenceTier?: string;
+  confidenceExplanation?: string;
+  confidenceBreakdown?: ConfidenceBreakdown;
+  evidenceStrength?: EvidenceStrength;
   explanation: string;
   evidence: EvidenceItem[];
 }
 
+export interface AnalysisSummary {
+  analysisId: string;
+  language: Language;
+  claim: string;
+  claimType?: string;
+  assessment: Assessment;
+  confidence: number | null;
+  confidenceTier?: string;
+  evidenceStrength?: EvidenceStrength;
+  evidenceCount: number;
+  createdAt?: string;
+}
+
 export const STAGES = [
+  "Receiving input",
   "Detecting language",
-  "Extracting claim",
-  "Understanding claim",
-  "Searching for evidence",
-  "Comparing evidence",
-  "Generating assessment",
+  "Extracting claims",
+  "Running multilingual model",
+  "Retrieving evidence",
+  "Ranking evidence",
+  "Verifying evidence",
+  "Computing confidence",
+  "Preparing explanation",
 ] as const;
 
 export type Stage = (typeof STAGES)[number];

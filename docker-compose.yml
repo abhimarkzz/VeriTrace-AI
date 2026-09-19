@@ -1,0 +1,90 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: veritrace-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-veritrace}
+      POSTGRES_USER: ${POSTGRES_USER:-veritrace}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-veritrace_secret}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-veritrace} -d ${POSTGRES_DB:-veritrace}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - veritrace-net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: veritrace-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: ${DATABASE_URL_CONTAINER:-postgresql+asyncpg://veritrace:veritrace_secret@postgres:5432/veritrace}
+      APP_ENV: ${APP_ENV:-production}
+      APP_DEBUG: ${APP_DEBUG:-false}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173,http://localhost:80,http://localhost,http://127.0.0.1:5173}
+      GOOGLE_FACTCHECK_API_KEY: ${GOOGLE_FACTCHECK_API_KEY:-}
+      EVIDENCE_ENABLE_OFFLINE_FALLBACK: ${EVIDENCE_ENABLE_OFFLINE_FALLBACK:-true}
+      MODEL_NAME: ${MODEL_NAME:-FacebookAI/xlm-roberta-base}
+      MODEL_DEVICE: ${MODEL_DEVICE:-cpu}
+      MODEL_LOAD_ON_STARTUP: ${MODEL_LOAD_ON_STARTUP:-true}
+      MODEL_BACKEND: ${MODEL_BACKEND:-mock}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      RATE_LIMIT_ENABLED: "true"
+      RATE_LIMIT_REQUESTS: "60"
+      RATE_LIMIT_WINDOW_SECONDS: "60"
+      PERSIST_USER_INPUT_TEXT: "false"
+      DATA_RETENTION_DAYS: "7"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./models:/app/models
+      - hf_cache:/home/veritrace/.cache
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    networks:
+      - veritrace-net
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-}
+    container_name: veritrace-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "5173:80"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://127.0.0.1/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - veritrace-net
+
+volumes:
+  postgres_data:
+  hf_cache:
+
+networks:
+  veritrace-net:
+    driver: bridge

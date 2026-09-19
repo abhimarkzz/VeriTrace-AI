@@ -1,0 +1,5 @@
+datasets>=2.19
+pandas>=2.2
+xxhash>=3.4
+pyyaml>=6.0
+scikit-learn>=1.5
