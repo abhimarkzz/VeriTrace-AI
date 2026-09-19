@@ -1,4 +1,23 @@
-# VeriTrace AI — Multilingual Evidence-Backed Fact Verification Platform
+<p align="center">
+  <img src="public/veritrace-icon.png" width="90" alt="VeriTrace AI Icon" />
+  <br />
+  <img src="public/veritrace-logo.png" width="340" alt="VeriTrace AI Logo" />
+</p>
+
+<h3 align="center">Multilingual Evidence-Grounded Misinformation Detection and Verification Intelligence</h3>
+
+<p align="center">
+  <em>“Detect the claim. Trace the evidence.”</em>
+</p>
+
+<p align="center">
+  <a href="#key-capabilities">Key Capabilities</a> •
+  <a href="#2-architecture--pipeline-flow">Architecture</a> •
+  <a href="#3-supported-languages">Languages</a> •
+  <a href="#4-quick-start">Quick Start</a> •
+  <a href="#5-model-evaluation--calibration">Evaluation</a> •
+  <a href="#8-security--responsible-ai">Responsible AI</a>
+</p>
 
 [![Python](https://img.shields.io/badge/Python-3.12%2B-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688.svg)](https://fastapi.tiangolo.com/)

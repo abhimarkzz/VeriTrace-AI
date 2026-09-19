@@ -1,5 +1,6 @@
 import { EvidenceNetwork } from "./EvidenceNetwork";
 import { IconArrow, IconCheck, IconShield, IconGlobe } from "./Icons";
+import { BrandMark } from "./Navigation";
 import { type Language } from "../types";
 
 interface HomeProps {
@@ -42,6 +43,7 @@ export function Home({ onAnalyzeClaim, onExploreEvidence }: HomeProps) {
         <div className="container hero-container">
           <div className="hero-content">
             <div className="eyebrow-wrapper">
+              <BrandMark size={20} />
               <span className="eyebrow-pill">MULTILINGUAL EVIDENCE INTELLIGENCE</span>
               <span className="lang-scope-badge">English · Hindi · Telugu</span>
             </div>
@@ -145,7 +147,10 @@ export function Home({ onAnalyzeClaim, onExploreEvidence }: HomeProps) {
             {/* VeriTrace Flow */}
             <div className="flow-card flow-veritrace">
               <div className="flow-card-head">
-                <span className="flow-badge verified">VERITRACE PIPELINE</span>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <BrandMark size={20} />
+                  <span className="flow-badge verified">VERITRACE PIPELINE</span>
+                </div>
                 <h3>Evidence-Grounded Resolution</h3>
               </div>
               <div className="flow-pipeline">

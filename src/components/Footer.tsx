@@ -1,4 +1,4 @@
-import { BrandMark, type NavView } from "./Navigation";
+import { BrandMark, BrandLogo, type NavView } from "./Navigation";
 
 interface FooterProps {
   onNavigate: (view: NavView) => void;
@@ -11,8 +11,9 @@ export function Footer({ onNavigate }: FooterProps) {
         <div className="footer-top">
           <div className="footer-brand-col">
             <div className="footer-brand">
-              <BrandMark />
-              <span className="brand-text">
+              <BrandMark size={32} />
+              <BrandLogo height={24} className="footer-logo-img" />
+              <span className="brand-text sr-only">
                 VeriTrace <span className="brand-suffix">AI</span>
               </span>
             </div>

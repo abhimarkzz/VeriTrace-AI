@@ -10,18 +10,43 @@ interface NavigationProps {
   isResultActive?: boolean;
 }
 
-export function BrandMark() {
+export function BrandMark({ size = 28, className = "" }: { size?: number; className?: string }) {
   return (
-    <svg className="brand-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true" style={{ width: 22, height: 22, flexShrink: 0 }}>
-      <circle cx="12" cy="12" r="10" stroke="var(--accent)" strokeWidth="1.6" />
-      <path
-        d="M7.5 12.4l3 3 6-6.4"
-        stroke="var(--accent)"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+    <img
+      src="/veritrace-icon.png"
+      alt="VeriTrace AI Icon"
+      className={`brand-mark ${className}`.trim()}
+      width={size}
+      height={size}
+      style={{
+        width: size,
+        height: size,
+        objectFit: "contain",
+        flexShrink: 0,
+        display: "inline-block",
+      }}
+    />
+  );
+}
+
+export function BrandLogo({ height = 22, className = "" }: { height?: number; className?: string }) {
+  return (
+    <picture className={`brand-logo-picture ${className}`.trim()}>
+      <source srcSet="/veritrace-logo-dark.png" media="(prefers-color-scheme: dark)" />
+      <img
+        src="/veritrace-logo.png"
+        alt="VeriTrace AI"
+        className="brand-logo-img"
+        height={height}
+        style={{
+          height,
+          width: "auto",
+          objectFit: "contain",
+          display: "inline-block",
+          verticalAlign: "middle",
+        }}
       />
-    </svg>
+    </picture>
   );
 }
 
@@ -54,8 +79,9 @@ export function Navigation({
           onClick={() => handleNavClick("home")}
           aria-label="VeriTrace AI Home"
         >
-          <BrandMark />
-          <span className="brand-name">
+          <BrandMark size={28} />
+          <BrandLogo height={22} className="brand-logo-header" />
+          <span className="brand-name sr-only">
             VeriTrace <span className="brand-suffix">AI</span>
           </span>
         </button>

@@ -1,9 +1,14 @@
 import { IconShield, IconAlert, IconCheck } from "./Icons";
+import { BrandMark, BrandLogo } from "./Navigation";
 
 export function About() {
   return (
     <div className="about-view fade-in">
       <header className="about-header">
+        <div className="about-brand-badge">
+          <BrandMark size={40} />
+          <BrandLogo height={28} />
+        </div>
         <span className="editorial-section-tag">PROJECT IDENTITY &amp; PURPOSE</span>
         <h1 className="about-title">WHY VERITRACE EXISTS</h1>
         <p className="about-subtitle">
