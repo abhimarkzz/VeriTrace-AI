@@ -17,3 +17,7 @@ data/
 models/
 *.pt
 *.bin
+
+# Local Tunnels & Logs
+bin/
+*.log
