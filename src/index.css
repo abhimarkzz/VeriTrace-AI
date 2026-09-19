@@ -330,19 +330,29 @@ input:focus-visible {
 }
 
 .brand-logo-header {
-  height: 22px;
+  height: 34px;
 }
 
 .brand-logo-img {
-  height: 22px;
+  height: 34px;
   width: auto;
   object-fit: contain;
   display: block;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 :root:not([data-theme="light"]) .brand-logo-img,
 [data-theme="dark"] .brand-logo-img {
   content: url("/veritrace-logo-dark.png");
+}
+
+.brand-mark {
+  object-fit: contain;
+  display: inline-block;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(0 2px 5px rgba(11, 31, 51, 0.1));
 }
 
 .about-brand-badge {
@@ -3451,8 +3461,9 @@ img, svg, video, canvas {
     height: 26px;
   }
 
+  .brand-logo-header,
   .brand-logo-img {
-    height: 20px;
+    height: 28px;
   }
 
   /* Hero adjustments */
@@ -3737,8 +3748,9 @@ img, svg, video, canvas {
     max-width: 110px;
   }
 
+  .brand-logo-header,
   .brand-logo-img {
-    height: 18px;
+    height: 24px;
     max-width: 100%;
   }
 

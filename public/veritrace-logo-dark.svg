@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 96" width="100%" height="100%">
+  <defs>
+    <linearGradient id="logoTealGradDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2CD49E" />
+      <stop offset="100%" stop-color="#20B486" />
+    </linearGradient>
+    <linearGradient id="logoBlueGradDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B92FF" />
+      <stop offset="100%" stop-color="#1A73E8" />
+    </linearGradient>
+  </defs>
+
+  <!-- Stylized V-Checkmark Monogram (Left) -->
+  <g transform="translate(10, 8)">
+    <!-- Left downward stroke of V (Warm White in dark mode) -->
+    <path d="M12 12 L38 68 L52 68 L26 12 Z" fill="#F7F7F2" />
+    <!-- Center upward stroke -->
+    <path d="M38 68 L64 12 L78 12 L46 76 Z" fill="url(#logoBlueGradDark)" />
+    <!-- Ascending verification checkmark wing -->
+    <path d="M46 76 L86 16 L98 22 L54 84 Z" fill="url(#logoTealGradDark)" />
+    <!-- Accent Verification Node -->
+    <circle cx="86" cy="16" r="6.5" fill="#20B486" />
+  </g>
+
+  <!-- Typography: VeriTrace AI -->
+  <g transform="translate(125, 62)" font-family="system-ui, -apple-system, 'SF Pro Display', 'Inter', sans-serif">
+    <!-- Veri (Warm White) -->
+    <text x="0" y="0" font-size="52" font-weight="900" letter-spacing="-0.03em" fill="#F7F7F2">Veri</text>
+    <!-- Trace -->
+    <text x="110" y="0" font-size="52" font-weight="900" letter-spacing="-0.03em" fill="url(#logoBlueGradDark)">Trace</text>
+    <!-- AI Badge -->
+    <g transform="translate(258, -44)">
+      <rect x="0" y="0" width="56" height="52" rx="10" fill="#1769D5" />
+      <text x="28" y="36" font-size="28" font-weight="800" text-anchor="middle" fill="#FFFFFF" letter-spacing="0.04em">AI</text>
+    </g>
+  </g>
+</svg>

@@ -14,36 +14,44 @@ export function BrandMark({ size = 28, className = "" }: { size?: number; classN
   return (
     <img
       src="/veritrace-icon.png"
+      srcSet="/veritrace-icon.png 1x, /veritrace-icon-512.png 2x"
       alt="VeriTrace AI Icon"
       className={`brand-mark ${className}`.trim()}
       width={size}
       height={size}
+      loading="eager"
+      decoding="async"
       style={{
         width: size,
         height: size,
         objectFit: "contain",
         flexShrink: 0,
         display: "inline-block",
+        imageRendering: "-webkit-optimize-contrast",
       }}
     />
   );
 }
 
-export function BrandLogo({ height = 22, className = "" }: { height?: number; className?: string }) {
+export function BrandLogo({ height = 34, className = "" }: { height?: number; className?: string }) {
   return (
     <picture className={`brand-logo-picture ${className}`.trim()}>
-      <source srcSet="/veritrace-logo-dark.png" media="(prefers-color-scheme: dark)" />
+      <source srcSet="/veritrace-logo-dark.png 1x, /veritrace-logo-dark.png 2x" media="(prefers-color-scheme: dark)" />
       <img
         src="/veritrace-logo.png"
+        srcSet="/veritrace-logo.png 1x, /veritrace-logo.png 2x"
         alt="VeriTrace AI"
         className="brand-logo-img"
         height={height}
+        loading="eager"
+        decoding="async"
         style={{
           height,
           width: "auto",
           objectFit: "contain",
           display: "inline-block",
           verticalAlign: "middle",
+          imageRendering: "-webkit-optimize-contrast",
         }}
       />
     </picture>
@@ -95,8 +103,7 @@ export function Navigation({
           onClick={() => handleNavClick("home")}
           aria-label="VeriTrace AI Home"
         >
-          <BrandMark size={28} />
-          <BrandLogo height={22} className="brand-logo-header" />
+          <BrandLogo height={34} className="brand-logo-header" />
           <span className="brand-name sr-only">
             VeriTrace <span className="brand-suffix">AI</span>
           </span>
