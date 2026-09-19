@@ -97,3 +97,21 @@ class TestLanguageDetection:
         result = detect_language("This is English text for analysis purposes.")
         assert result.all_candidates is not None
         assert len(result.all_candidates) > 0
+
+    # ── Short English Claims Disambiguation ──────────────────────────────
+
+    def test_short_english_headlines(self):
+        claims = [
+            "Prime Minister Modi Died",
+            "PM Modi dead",
+            "Modi resigned",
+            "Amit Shah hospital",
+            "Rahul Gandhi speech",
+            "Metadata test claim.",
+        ]
+        for claim in claims:
+            res = detect_language(claim)
+            assert res.language_code == "en", f"Failed for '{claim}': got {res.language_code}"
+            assert res.status == DetectionStatus.OK, f"Status failed for '{claim}': got {res.status}"
+            assert res.is_supported
+
