@@ -14,7 +14,7 @@ export function BrandMark({ size = 28, className = "" }: { size?: number; classN
   return (
     <img
       src="/veritrace-icon.png"
-      srcSet="/veritrace-icon.png 1x, /veritrace-icon-512.png 2x"
+      srcSet="/veritrace-icon-128.png 1x, /veritrace-icon-256.png 2x, /veritrace-icon-512.png 3x"
       alt="VeriTrace AI Icon"
       className={`brand-mark ${className}`.trim()}
       width={size}
@@ -27,34 +27,43 @@ export function BrandMark({ size = 28, className = "" }: { size?: number; classN
         objectFit: "contain",
         flexShrink: 0,
         display: "inline-block",
-        imageRendering: "-webkit-optimize-contrast",
+        verticalAlign: "middle",
       }}
     />
   );
 }
 
-export function BrandLogo({ height = 34, className = "" }: { height?: number; className?: string }) {
+export function BrandLogo({
+  height = 28,
+  className = "",
+  variant = "light",
+}: {
+  height?: number;
+  className?: string;
+  variant?: "light" | "dark";
+}) {
+  const isDark = variant === "dark";
   return (
-    <picture className={`brand-logo-picture ${className}`.trim()}>
-      <source srcSet="/veritrace-logo-dark.png 1x, /veritrace-logo-dark.png 2x" media="(prefers-color-scheme: dark)" />
-      <img
-        src="/veritrace-logo.png"
-        srcSet="/veritrace-logo.png 1x, /veritrace-logo.png 2x"
-        alt="VeriTrace AI"
-        className="brand-logo-img"
-        height={height}
-        loading="eager"
-        decoding="async"
-        style={{
-          height,
-          width: "auto",
-          objectFit: "contain",
-          display: "inline-block",
-          verticalAlign: "middle",
-          imageRendering: "-webkit-optimize-contrast",
-        }}
-      />
-    </picture>
+    <img
+      src={isDark ? "/veritrace-logo-dark.png" : "/veritrace-logo.png"}
+      srcSet={
+        isDark
+          ? "/veritrace-logo-dark.png 1x, /veritrace-logo-dark-2x.png 2x"
+          : "/veritrace-logo.png 1x, /veritrace-logo-2x.png 2x"
+      }
+      alt="VeriTrace AI"
+      className={`brand-logo-img ${className}`.trim()}
+      height={height}
+      loading="eager"
+      decoding="async"
+      style={{
+        height,
+        width: "auto",
+        objectFit: "contain",
+        display: "inline-block",
+        verticalAlign: "middle",
+      }}
+    />
   );
 }
 
@@ -103,7 +112,8 @@ export function Navigation({
           onClick={() => handleNavClick("home")}
           aria-label="VeriTrace AI Home"
         >
-          <BrandLogo height={34} className="brand-logo-header" />
+          <BrandMark size={30} />
+          <BrandLogo height={28} className="brand-logo-header" />
           <span className="brand-name sr-only">
             VeriTrace <span className="brand-suffix">AI</span>
           </span>

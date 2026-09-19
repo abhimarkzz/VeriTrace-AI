@@ -11,7 +11,8 @@ export function Footer({ onNavigate }: FooterProps) {
         <div className="footer-top">
           <div className="footer-brand-col">
             <div className="footer-brand">
-              <BrandLogo height={32} className="footer-logo-img" />
+              <BrandMark size={32} />
+              <BrandLogo height={28} className="footer-logo-img" />
               <span className="brand-text sr-only">
                 VeriTrace <span className="brand-suffix">AI</span>
               </span>

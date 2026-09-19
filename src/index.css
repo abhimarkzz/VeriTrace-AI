@@ -313,15 +313,18 @@ input:focus-visible {
 }
 
 .brand-mark {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   object-fit: contain;
   flex-shrink: 0;
+  display: inline-block;
+  vertical-align: middle;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: drop-shadow(0 2px 5px rgba(11, 31, 51, 0.08));
 }
 
 .brand-link:hover .brand-mark {
-  transform: rotate(20deg) scale(1.08);
+  transform: rotate(18deg) scale(1.06);
 }
 
 .brand-logo-picture {
@@ -330,29 +333,15 @@ input:focus-visible {
 }
 
 .brand-logo-header {
-  height: 34px;
+  height: 28px;
 }
 
 .brand-logo-img {
-  height: 34px;
+  height: 28px;
   width: auto;
   object-fit: contain;
-  display: block;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-}
-
-:root:not([data-theme="light"]) .brand-logo-img,
-[data-theme="dark"] .brand-logo-img {
-  content: url("/veritrace-logo-dark.png");
-}
-
-.brand-mark {
-  object-fit: contain;
   display: inline-block;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-  filter: drop-shadow(0 2px 5px rgba(11, 31, 51, 0.1));
+  vertical-align: middle;
 }
 
 .about-brand-badge {
@@ -3463,7 +3452,7 @@ img, svg, video, canvas {
 
   .brand-logo-header,
   .brand-logo-img {
-    height: 28px;
+    height: 24px;
   }
 
   /* Hero adjustments */
@@ -3744,13 +3733,22 @@ img, svg, video, canvas {
 
 /* ── 6. Extra Small Devices (<= 360px / 320px) ──────────────── */
 @media (max-width: 360px) {
+  .brand-link {
+    gap: 6px;
+  }
+
+  .brand-mark {
+    width: 22px;
+    height: 22px;
+  }
+
   .brand-logo-picture {
     max-width: 110px;
   }
 
   .brand-logo-header,
   .brand-logo-img {
-    height: 24px;
+    height: 20px;
     max-width: 100%;
   }
 
