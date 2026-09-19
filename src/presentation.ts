@@ -41,8 +41,8 @@ export const ASSESSMENT_META: Record<Assessment, AssessmentMeta> = {
     rest: " evidence",
     summary:
       "Reliable sources genuinely disagree on this claim, so it cannot be resolved in one direction.",
-    color: "var(--neutral)",
-    soft: "var(--neutral-soft)",
+    color: "var(--warning)",
+    soft: "var(--warning-soft)",
     icon: IconSplit,
   },
   INSUFFICIENT_EVIDENCE: {
@@ -51,8 +51,8 @@ export const ASSESSMENT_META: Record<Assessment, AssessmentMeta> = {
     rest: " evidence",
     summary:
       "Not enough evidence was found to assess this claim either way. That is an outcome, not a failure.",
-    color: "var(--text-muted)",
-    soft: "var(--surface-sunken)",
+    color: "var(--warning)",
+    soft: "var(--warning-soft)",
     icon: IconQuestion,
   },
 };
@@ -60,7 +60,7 @@ export const ASSESSMENT_META: Record<Assessment, AssessmentMeta> = {
 export const RELATION_META: Record<Relation, { label: string; color: string; soft: string }> = {
   SUPPORT: { label: "Supports", color: "var(--support)", soft: "var(--support-soft)" },
   CONTRADICT: { label: "Contradicts", color: "var(--contradict)", soft: "var(--contradict-soft)" },
-  INSUFFICIENT: { label: "Not conclusive", color: "var(--neutral)", soft: "var(--neutral-soft)" },
+  INSUFFICIENT: { label: "Not conclusive", color: "var(--warning)", soft: "var(--warning-soft)" },
 };
 
 export const percent = (value?: number | null): string => {
