@@ -453,6 +453,14 @@ input:focus-visible {
   transform: translateY(-1px);
 }
 
+.btn-editorial-primary:disabled,
+.btn-editorial-primary[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 .btn-editorial-secondary {
   display: inline-flex;
   align-items: center;
@@ -486,12 +494,18 @@ input:focus-visible {
 }
 
 /* ── Evidence Network Visualization ──────────────────────── */
+.hero-visual {
+  min-width: 0;
+  overflow: hidden;
+}
+
 .evidence-network-wrapper {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow);
   overflow: hidden;
+  max-width: 100%;
 }
 
 .network-header {
@@ -644,6 +658,8 @@ input:focus-visible {
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
+  overflow-x: auto;
+  padding-bottom: 2px;
 }
 
 .flow-node {
@@ -942,13 +958,14 @@ input:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: 32px;
+  overflow: hidden;
 }
 
 .cta-eyebrow {
   font-size: 0.75rem;
   font-weight: 750;
   letter-spacing: 0.1em;
-  color: var(--accent);
+  color: #60a5fa;
   display: block;
   margin-bottom: 12px;
 }
@@ -1621,17 +1638,25 @@ input:focus-visible {
   padding: 0;
 }
 
+.meta-row > div {
+  min-width: 0;
+  overflow: hidden;
+}
+
 .meta-row dt {
   font-size: 0.72rem;
   font-weight: 700;
   color: var(--text-muted);
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .meta-row dd {
   font-size: 0.88rem;
   font-weight: 600;
   margin: 2px 0 0;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 /* Evidence Relationship Map */
@@ -1934,10 +1959,72 @@ input:focus-visible {
   color: var(--warning);
 }
 
+.card-body {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
 .card-note {
   font-size: 0.78rem;
   color: var(--text-faint);
   margin-top: 12px;
+}
+
+/* Evidence empty states */
+.empty-relationship-box {
+  text-align: center;
+  padding: 32px 20px;
+  background: var(--surface-sunken);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-sm);
+}
+
+.empty-relationship-box .empty-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 3px 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.empty-relationship-box p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.empty-trail {
+  padding: 24px 0;
+}
+
+.empty-trail .card-body {
+  font-size: 0.92rem;
+}
+
+.empty-trail .card-note {
+  margin-top: 8px;
+}
+
+/* State banner icons */
+.state-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Evidence footer separator */
+.scores i {
+  font-style: normal;
+  color: var(--border-strong);
+  margin: 0 2px;
 }
 
 /* ── Evidence Explorer View ──────────────────────────────── */
@@ -2816,9 +2903,15 @@ input:focus-visible {
     gap: 40px;
   }
 
+  .hero-visual {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
   .verdict-head {
     grid-template-columns: 1fr;
     gap: 28px;
+    padding: 28px 24px;
   }
 
   .result-cols {
@@ -2856,6 +2949,10 @@ input:focus-visible {
   .limitations-grid {
     grid-template-columns: 1fr;
   }
+
+  .meta-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 768px) {
@@ -2892,6 +2989,11 @@ input:focus-visible {
     gap: 32px;
   }
 
+  .footer-links-col {
+    flex-direction: column;
+    gap: 24px;
+  }
+
   .meta-row {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -2908,11 +3010,54 @@ input:focus-visible {
   .pipeline-diagram-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .verdict-name {
+    font-size: 1.6rem;
+  }
+
+  .workspace-title {
+    font-size: 1.8rem;
+  }
+
+  .composer-action-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions-right {
+    justify-content: flex-end;
+  }
+
+  .flow-node {
+    min-width: 70px;
+    padding: 10px 8px;
+  }
+
+  .flow-node strong {
+    font-size: 0.75rem;
+  }
+
+  .node-caption {
+    font-size: 0.65rem;
+  }
+
+  .flow-arrow {
+    font-size: 0.85rem;
+  }
+
+  .claim-quote {
+    font-size: 1.05rem;
+    padding: 14px 16px;
+  }
 }
 
 @media (max-width: 480px) {
   .hero-headline {
     font-size: 2.1rem;
+  }
+
+  .editorial-title {
+    font-size: 1.5rem;
   }
 
   .stats {
@@ -2940,5 +3085,50 @@ input:focus-visible {
   .btn-view-investigation {
     width: 100%;
     justify-content: center;
+  }
+
+  .meta-row {
+    grid-template-columns: 1fr;
+  }
+
+  .container {
+    padding: 0 16px;
+  }
+
+  .verdict-head {
+    padding: 20px 16px;
+  }
+
+  .card {
+    padding: 18px;
+  }
+
+  .editorial-hero {
+    padding: 40px 0 56px;
+  }
+
+  .section-gap,
+  .section-contrast,
+  .section-process,
+  .section-multilingual {
+    padding: 56px 0;
+  }
+
+  .section-cta-editorial {
+    padding: 48px 0 64px;
+  }
+
+  .cta-box {
+    padding: 28px 20px;
+  }
+
+  .cta-content h2 {
+    font-size: 1.4rem;
+  }
+
+  .eyebrow-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
 }

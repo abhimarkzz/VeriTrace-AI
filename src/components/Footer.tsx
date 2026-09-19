@@ -40,7 +40,7 @@ export function Footer({ onNavigate }: FooterProps) {
               <button onClick={() => onNavigate("research")}>Research &amp; Methodology</button>
               <button onClick={() => onNavigate("about")}>Why VeriTrace Exists</button>
               <a
-                href="/docs"
+                href="/api/docs"
                 target="_blank"
                 rel="noreferrer"
               >
