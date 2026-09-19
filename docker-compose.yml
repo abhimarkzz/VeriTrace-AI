@@ -32,7 +32,7 @@ services:
       DATABASE_URL: ${DATABASE_URL_CONTAINER:-postgresql+asyncpg://veritrace:veritrace_secret@postgres:5432/veritrace}
       APP_ENV: ${APP_ENV:-production}
       APP_DEBUG: ${APP_DEBUG:-false}
-      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173,http://localhost:80,http://localhost,http://127.0.0.1:5173}
+      CORS_ORIGINS: ${CORS_ORIGINS:-*}
       GOOGLE_FACTCHECK_API_KEY: ${GOOGLE_FACTCHECK_API_KEY:-}
       EVIDENCE_ENABLE_OFFLINE_FALLBACK: ${EVIDENCE_ENABLE_OFFLINE_FALLBACK:-true}
       MODEL_NAME: ${MODEL_NAME:-FacebookAI/xlm-roberta-base}

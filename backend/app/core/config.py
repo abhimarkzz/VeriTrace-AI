@@ -31,7 +31,7 @@ class Settings(BaseSettings):
     port: int = 8000
 
     # ── CORS ─────────────────────────────────────────────────────────────
-    cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
+    cors_origins: str = "*"
 
     # ── Input Limits ─────────────────────────────────────────────────────
     max_input_length: int = 10_000

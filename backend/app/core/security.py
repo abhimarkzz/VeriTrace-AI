@@ -275,9 +275,9 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         if not settings.rate_limit_enabled:
             return await call_next(request)
 
-        # Exempt monitoring & documentation endpoints
+        # Exempt preflight OPTIONS requests and monitoring & documentation endpoints
         path = request.url.path
-        if path in RATE_LIMIT_EXEMPT_PATHS:
+        if request.method == "OPTIONS" or path in RATE_LIMIT_EXEMPT_PATHS:
             return await call_next(request)
 
         client_ip = get_client_ip(request)

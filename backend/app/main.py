@@ -107,11 +107,15 @@ async def api_docs_redirect():
 
 # ── CORS ─────────────────────────────────────────────────────────────────
 
+cors_origins = settings.cors_origin_list
+has_wildcard = "*" in cors_origins
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origin_list,
+    allow_origins=[] if has_wildcard else cors_origins,
+    allow_origin_regex=r"^https?://.*" if has_wildcard else r"^https?://([a-zA-Z0-9.-]+\.)?(trycloudflare\.com|localhost|127\.0\.0\.1|lhr\.life)(:\d+)?$",
     allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
     expose_headers=[
         "X-Request-ID",
