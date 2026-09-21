@@ -133,7 +133,7 @@ $$\text{Model Confidence} \neq \text{Evidence Strength} \neq \text{Truth Probabi
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/veritrace-ai/veritrace-ai.git
+   git clone https://github.com/abhimarkzz/VeriTrace-AI.git
    cd veritrace-ai
    ```
 
